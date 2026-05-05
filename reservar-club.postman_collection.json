@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Reservar Club API",
+    "name": "Reservas Club API",
     "description": "API collection for Reservar Club - A sports court reservation system",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
