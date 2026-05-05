@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"errors"
 
 	"github.com/adubr/reservar-club-back/internal/domain"
 )
