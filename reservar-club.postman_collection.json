@@ -1,0 +1,395 @@
+{
+  "info": {
+    "name": "Reservar Club API",
+    "description": "API collection for Reservar Club - A sports court reservation system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get Auth URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Get the Google OAuth2 authentication URL for login"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"your_oauth_code_here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login with Google OAuth2 code and get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get current authenticated user information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sports",
+      "item": [
+        {
+          "name": "List All Sports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sports",
+              "host": ["{{base_url}}"],
+              "path": ["sports"]
+            },
+            "description": "Get list of all available sports"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sport by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sports/{{sport_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sports", "{{sport_id}}"]
+            },
+            "description": "Get a specific sport by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Sport",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tennis\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sports",
+              "host": ["{{base_url}}"],
+              "path": ["sports"]
+            },
+            "description": "Create a new sport (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Sport",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sports/{{sport_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sports", "{{sport_id}}"]
+            },
+            "description": "Delete a sport by ID (requires authentication)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Courts",
+      "item": [
+        {
+          "name": "List All Courts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/courts",
+              "host": ["{{base_url}}"],
+              "path": ["courts"]
+            },
+            "description": "Get list of all available courts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Court by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/courts/{{court_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["courts", "{{court_id}}"]
+            },
+            "description": "Get a specific court by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "List Courts by Sport",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sports/{{sport_id}}/courts",
+              "host": ["{{base_url}}"],
+              "path": ["sports", "{{sport_id}}", "courts"]
+            },
+            "description": "Get list of courts for a specific sport"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Court",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Court 1\",\n  \"sport_id\": \"{{sport_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/courts",
+              "host": ["{{base_url}}"],
+              "path": ["courts"]
+            },
+            "description": "Create a new court (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Court",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Court Name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/courts/{{court_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["courts", "{{court_id}}"]
+            },
+            "description": "Update a court name (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Court",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courts/{{court_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["courts", "{{court_id}}"]
+            },
+            "description": "Delete a court (requires authentication)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "List User Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations",
+              "host": ["{{base_url}}"],
+              "path": ["reservations"]
+            },
+            "description": "Get list of all reservations for the current user (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reservation by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}"]
+            },
+            "description": "Get a specific reservation by ID (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"court_id\": \"{{court_id}}\",\n  \"start_date\": \"2024-12-20T10:00:00Z\",\n  \"end_date\": \"2024-12-20T12:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reservations",
+              "host": ["{{base_url}}"],
+              "path": ["reservations"]
+            },
+            "description": "Create a new reservation for a court (requires authentication)"
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}", "cancel"]
+            },
+            "description": "Cancel an existing reservation (requires authentication)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "sport_id",
+      "value": "sport_id_here",
+      "type": "string"
+    },
+    {
+      "key": "court_id",
+      "value": "court_id_here",
+      "type": "string"
+    },
+    {
+      "key": "reservation_id",
+      "value": "reservation_id_here",
+      "type": "string"
+    }
+  ]
+}
