@@ -13,7 +13,7 @@ func TestCreateSport(t *testing.T) {
 	mockRepo := new(MockSportRepository)
 
 	mockRepo.On("GetByName", mock.Anything, "Tennis").Return(nil, domain.ErrNotFound)
-	mockRepo.On("Creates", mock.Anything, mock.MatchedBy(func(s *domain.Sport) bool {
+	mockRepo.On("Create", mock.Anything, mock.MatchedBy(func(s *domain.Sport) bool {
 		return s.Name == "Tennis"
 	})).Return(nil)
 
