@@ -27,11 +27,15 @@ func main() {
 	sportRepo := postgres.NewSportRepository(dbConn)
 	courtRepo := postgres.NewCourtRepository(dbConn)
 	reservationRepo := postgres.NewReservationRepository(dbConn)
+	scheduleRepo := postgres.NewClubScheduleRepository(dbConn)
+	pricingRuleRepo := postgres.NewPricingRuleRepository(dbConn)
 
 	authService := services.NewAuthService(userRepo)
 	sportService := services.NewSportService(sportRepo)
 	courtService := services.NewCourtService(courtRepo, sportRepo)
-	reservationService := services.NewReservationService(reservationRepo, courtRepo)
+	scheduleService := services.NewScheduleService(scheduleRepo)
+	pricingService := services.NewPricingService(pricingRuleRepo)
+	reservationService := services.NewReservationService(reservationRepo, courtRepo, scheduleRepo, pricingService)
 
 	tokenManager := jwt.NewTokenManager(cfg.JWT.Secret)
 	googleProvider := oauth2.NewGoogleOAuth2Provider(
@@ -44,6 +48,9 @@ func main() {
 	sportHandler := handlers.NewSportHandler(sportService)
 	courtHandler := handlers.NewCourtHandler(courtService)
 	reservationHandler := handlers.NewReservationHandler(reservationService)
+	scheduleHandler := handlers.NewScheduleHandler(scheduleService)
+	pricingHandler := handlers.NewPricingHandler(pricingService)
+	availabilityHandler := handlers.NewAvailabilityHandler(reservationService, scheduleService, courtService)
 
 	router := gin.Default()
 
@@ -58,6 +65,10 @@ func main() {
 		publicRoutes.GET("/courts", courtHandler.ListCourts)
 		publicRoutes.GET("/courts/:id", courtHandler.GetCourt)
 		publicRoutes.GET("/sports/:sport_id/courts", courtHandler.ListCourtsBySport)
+		publicRoutes.GET("/schedule", scheduleHandler.GetSchedule)
+		publicRoutes.GET("/availability", availabilityHandler.GetAvailability)
+		publicRoutes.GET("/pricing/estimate", pricingHandler.EstimatePrice)
+		publicRoutes.GET("/pricing/rules", pricingHandler.ListPricingRules)
 	}
 
 	protectedRoutes := router.Group("")
@@ -76,6 +87,10 @@ func main() {
 		protectedRoutes.GET("/reservations/:id", reservationHandler.GetReservation)
 		protectedRoutes.POST("/reservations", reservationHandler.CreateReservation)
 		protectedRoutes.POST("/reservations/:id/cancel", reservationHandler.CancelReservation)
+
+		protectedRoutes.PUT("/schedule/:day", scheduleHandler.UpsertSchedule)
+		protectedRoutes.POST("/pricing/rules", pricingHandler.CreatePricingRule)
+		protectedRoutes.DELETE("/pricing/rules/:id", pricingHandler.DeletePricingRule)
 	}
 
 	address := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)

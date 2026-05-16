@@ -169,3 +169,61 @@ func (m *MockReservationRepository) Cancel(ctx context.Context, id string) error
 	args := m.Called(ctx, id)
 	return args.Error(0)
 }
+
+type MockClubScheduleRepository struct {
+	mock.Mock
+}
+
+func (m *MockClubScheduleRepository) GetByDayOfWeek(ctx context.Context, dayOfWeek int) (*domain.ClubSchedule, error) {
+	args := m.Called(ctx, dayOfWeek)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*domain.ClubSchedule), args.Error(1)
+}
+
+func (m *MockClubScheduleRepository) ListAll(ctx context.Context) ([]*domain.ClubSchedule, error) {
+	args := m.Called(ctx)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*domain.ClubSchedule), args.Error(1)
+}
+
+func (m *MockClubScheduleRepository) Upsert(ctx context.Context, schedule *domain.ClubSchedule) (*domain.ClubSchedule, error) {
+	args := m.Called(ctx, schedule)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*domain.ClubSchedule), args.Error(1)
+}
+
+type MockPricingRuleRepository struct {
+	mock.Mock
+}
+
+func (m *MockPricingRuleRepository) Create(ctx context.Context, rule *domain.PricingRule) error {
+	args := m.Called(ctx, rule)
+	return args.Error(0)
+}
+
+func (m *MockPricingRuleRepository) GetByID(ctx context.Context, id string) (*domain.PricingRule, error) {
+	args := m.Called(ctx, id)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*domain.PricingRule), args.Error(1)
+}
+
+func (m *MockPricingRuleRepository) ListBySportID(ctx context.Context, sportID string) ([]*domain.PricingRule, error) {
+	args := m.Called(ctx, sportID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*domain.PricingRule), args.Error(1)
+}
+
+func (m *MockPricingRuleRepository) Delete(ctx context.Context, id string) error {
+	args := m.Called(ctx, id)
+	return args.Error(0)
+}

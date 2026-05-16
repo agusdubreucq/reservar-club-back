@@ -37,7 +37,7 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 	reservation, err := h.reservationService.CreateReservation(c.Request.Context(), userID, req.CourtID, req.StartDate, req.EndDate)
 	if err != nil {
 		if errors.Is(err, domain.ErrInvalidDateRange) {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "end date must be after start date"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid date range or duration (minimum 1 hour, multiple of 30 min, must start/end at :00 or :30)"})
 			return
 		}
 		if errors.Is(err, domain.ErrCourtNotFound) {
@@ -46,6 +46,10 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 		}
 		if errors.Is(err, domain.ErrReservationOverlap) {
 			c.JSON(http.StatusConflict, gin.H{"error": "reservation overlaps with existing reservation"})
+			return
+		}
+		if errors.Is(err, domain.ErrReservationOutsideSchedule) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "reservation is outside club schedule"})
 			return
 		}
 		log.Printf("failed to create reservation: %v", err)

@@ -13,8 +13,9 @@ func TestNewReservation(t *testing.T) {
 	courtID := "court-1"
 	startDate := time.Now().UTC().Add(24 * time.Hour)
 	endDate := startDate.Add(2 * time.Hour)
+	price := 100.0
 
-	res := NewReservation(id, userID, courtID, startDate, endDate)
+	res := NewReservation(id, userID, courtID, startDate, endDate, price)
 
 	assert.Equal(t, id, res.ID)
 	assert.Equal(t, userID, res.UserID)
@@ -22,13 +23,14 @@ func TestNewReservation(t *testing.T) {
 	assert.Equal(t, startDate, res.StartDate)
 	assert.Equal(t, endDate, res.EndDate)
 	assert.Equal(t, ReservationStatusActive, res.Status)
+	assert.Equal(t, price, res.TotalPrice)
 	assert.Equal(t, res.CreatedAt, res.UpdatedAt)
 }
 
 func TestReservationCancel(t *testing.T) {
 	res := NewReservation("res-1", "user-1", "court-1",
 		time.Now().UTC().Add(24*time.Hour),
-		time.Now().UTC().Add(26*time.Hour))
+		time.Now().UTC().Add(26*time.Hour), 50.0)
 
 	originalCreatedAt := res.CreatedAt
 
@@ -46,7 +48,7 @@ func TestReservationCancel(t *testing.T) {
 func TestReservationIsOverlapping(t *testing.T) {
 	startDate := time.Date(2025, 1, 1, 10, 0, 0, 0, time.UTC)
 	endDate := time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC)
-	res1 := NewReservation("res-1", "user-1", "court-1", startDate, endDate)
+	res1 := NewReservation("res-1", "user-1", "court-1", startDate, endDate, 0)
 
 	tests := []struct {
 		name      string
@@ -94,7 +96,7 @@ func TestReservationIsOverlapping(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res2 := NewReservation("res-2", "user-1", "court-1", tt.startDate, tt.endDate)
+			res2 := NewReservation("res-2", "user-1", "court-1", tt.startDate, tt.endDate, 0)
 			assert.Equal(t, tt.expected, res1.IsOverlapping(res2))
 		})
 	}
@@ -129,7 +131,7 @@ func TestReservationIsValidDateRange(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res := NewReservation("res-1", "user-1", "court-1", tt.startDate, tt.endDate)
+			res := NewReservation("res-1", "user-1", "court-1", tt.startDate, tt.endDate, 0)
 			assert.Equal(t, tt.expected, res.IsValidDateRange())
 		})
 	}

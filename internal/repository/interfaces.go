@@ -40,3 +40,16 @@ type ReservationRepository interface {
 	ListByCourtAndDateRange(ctx context.Context, courtID string, startDate, endDate time.Time) ([]*domain.Reservation, error)
 	Cancel(ctx context.Context, id string) error
 }
+
+type ClubScheduleRepository interface {
+	GetByDayOfWeek(ctx context.Context, dayOfWeek int) (*domain.ClubSchedule, error)
+	ListAll(ctx context.Context) ([]*domain.ClubSchedule, error)
+	Upsert(ctx context.Context, schedule *domain.ClubSchedule) (*domain.ClubSchedule, error)
+}
+
+type PricingRuleRepository interface {
+	Create(ctx context.Context, rule *domain.PricingRule) error
+	GetByID(ctx context.Context, id string) (*domain.PricingRule, error)
+	ListBySportID(ctx context.Context, sportID string) ([]*domain.PricingRule, error)
+	Delete(ctx context.Context, id string) error
+}
