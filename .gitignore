@@ -1,0 +1,50 @@
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Go
+bin/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.so.*
+*.dylib
+*.test
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dependencies
+vendor/
+
+# Build artifacts
+build/
+*.o
+*.a
+
+# ngrok
+ngrok
+ngrok.exe
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+
+# Windows
+Thumbs.db
+*.lnk
+
+# Temporal files
+*.tmp
+*.log

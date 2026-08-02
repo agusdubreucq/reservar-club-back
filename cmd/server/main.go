@@ -52,6 +52,13 @@ func main() {
 	pricingHandler := handlers.NewPricingHandler(pricingService)
 	availabilityHandler := handlers.NewAvailabilityHandler(reservationService, scheduleService, courtService)
 
+	whatsappService := services.NewWhatsAppService(
+		cfg.Twilio.AccountSID,
+		cfg.Twilio.AuthToken,
+		cfg.Twilio.PhoneNumber,
+	)
+	whatsappHandler := handlers.NewWhatsAppHandler(whatsappService)
+
 	router := gin.Default()
 
 	router.Use(handlers.CORSMiddleware())
@@ -69,6 +76,10 @@ func main() {
 		publicRoutes.GET("/availability", availabilityHandler.GetAvailability)
 		publicRoutes.GET("/pricing/estimate", pricingHandler.EstimatePrice)
 		publicRoutes.GET("/pricing/rules", pricingHandler.ListPricingRules)
+
+		// WhatsApp routes
+		publicRoutes.POST("/api/whatsapp/webhook", whatsappHandler.HandleIncomingMessage)
+		publicRoutes.GET("/api/whatsapp/health", whatsappHandler.HealthCheck)
 	}
 
 	protectedRoutes := router.Group("")

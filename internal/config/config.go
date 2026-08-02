@@ -12,6 +12,7 @@ type Config struct {
 	Database DatabaseConfig
 	OAuth2   OAuth2Config
 	JWT      JWTConfig
+	Twilio   TwilioConfig
 }
 
 type ServerConfig struct {
@@ -40,6 +41,12 @@ type JWTConfig struct {
 	RefreshExpiry time.Duration
 }
 
+type TwilioConfig struct {
+	AccountSID  string
+	AuthToken   string
+	PhoneNumber string
+}
+
 func Load() *Config {
 	return &Config{
 		Server: ServerConfig{
@@ -63,6 +70,11 @@ func Load() *Config {
 			Secret:        getEnv("JWT_SECRET", "your-secret-key-change-in-prod"),
 			ExpiresIn:     getDurationEnv("JWT_EXPIRES_IN", 24*time.Hour),
 			RefreshExpiry: getDurationEnv("JWT_REFRESH_EXPIRY", 7*24*time.Hour),
+		},
+		Twilio: TwilioConfig{
+			AccountSID:  getEnv("TWILIO_ACCOUNT_SID", ""),
+			AuthToken:   getEnv("TWILIO_AUTH_TOKEN", ""),
+			PhoneNumber: getEnv("TWILIO_PHONE_NUMBER", ""),
 		},
 	}
 }
